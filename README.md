@@ -1,6 +1,6 @@
 # Automated Jira Response Bot
 
-[![Build Status](tbd) [![codecov.io](tbd) [![Sputnik](tbd)
+[![Build Status](https://travis-ci.org/SxMShaDoW/jira2slack-webhook-bridge.svg?branch=master)](https://travis-ci.org/SxMShaDoW/jira2slack-webhook-bridge) [![codecov.io](tbd) [![Sputnik](tbd)
 
 Inspired and based off of the the [Jira2Slack-Webhook-Bridge](https://github.com/sebflipper/jira2slack-webhook-bridge) and converted into a support bot.
 
