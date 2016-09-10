@@ -1,12 +1,9 @@
 language: node_js
 node_js:
   - "6.1"
-  
-install:
-  - npm install -g codecov
 
 script:
-  - codecov
+  - npm test
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
