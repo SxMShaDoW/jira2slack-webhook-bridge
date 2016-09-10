@@ -11,6 +11,7 @@
   "dependencies": {
     "body-parser": "^1.14.2",
     "express": "^4.13.4",
+    "fuzzy": "^0.1.1",
     "request": "^2.69.0"
   },
   "devDependencies": {

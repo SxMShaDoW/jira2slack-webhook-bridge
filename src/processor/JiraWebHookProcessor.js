@@ -3,6 +3,7 @@
 let request = require('request'),
     jiraFormatter = require('../formatter/jiraFormatter');
 
+
 module.exports = class JiraWebHookProcessor {
   /**
    * Creates a new JiraWebHookProcessor
@@ -67,4 +68,5 @@ module.exports = class JiraWebHookProcessor {
       });
     }
   }
+
 };

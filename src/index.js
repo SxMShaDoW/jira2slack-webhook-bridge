@@ -5,7 +5,10 @@ let express = require('express'),
     bodyParser = require('body-parser'),
 
     JiraWebHookProcessor = require('./processor/JiraWebHookProcessor'),
-    config = require('./config/default.json');
+    generatedAutomatedResponse = require('./response-matching/generate-automated-response'),
+    responsesConfig = require('./config/responses-config.json');
+
+
 
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
@@ -27,6 +30,23 @@ app.post('/jira-webhook', (req, res) => {
 
   res.send('OK');
 });
+
+app.post('/prometheus-bot', (req, res) => {
+  // get the title somehow
+  const title = 'This is an example title. I need help closing a sprint';
+  const response = generatedAutomatedResponse({ config: responsesConfig, title: title });
+  res.send(response);
+});
+
+app.get('/prometheus-bot-test', (req, res) => {
+  const title = req.query.title;
+  if (!title) {
+    res.send('No title given. You can provide a title in the url via /prometheus-bot-test/?title="Some title text"');
+  }
+  const response = generatedAutomatedResponse({ config: responsesConfig, title: title });
+  res.send('<html><body><pre>' + response  + '</pre></body></html>');
+});
+
 
 app.listen(3000, () => {
   console.log('jira2slack-webhook-bridge listening on port 3000!');
