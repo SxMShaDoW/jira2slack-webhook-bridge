@@ -2,12 +2,5 @@ language: node_js
 node_js:
   - "6.1"
 
-install:
-  - npm install -g codecov
-  - npm install -g istanbul
-script:
-  - istanbul cover node_modules/.bin/mocha --report lcovonly -- -R spec
-  - codecov
-
 after_success:
   - bash <(curl -s https://codecov.io/bash)
