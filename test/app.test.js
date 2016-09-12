@@ -1,3 +1,4 @@
+/* 
 'use strict';
 
 let assert = require('assert'),
@@ -134,3 +135,4 @@ describe('E2E Tests', () => {
     });
   });
 });
+*/
