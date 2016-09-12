@@ -2,3 +2,4 @@ node_modules
 src/config/default.json
 coverage/
 .DS_Store
+src/config/responses-config.json
