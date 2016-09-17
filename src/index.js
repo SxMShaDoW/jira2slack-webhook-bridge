@@ -32,17 +32,45 @@ app.post('/jira-webhook', (req, res) => {
 });
 
 app.post('/prometheus-bot', (req, res) => {
-  let title = ''
+  let text = '' //Original Ticket
   try {
   const jiraSummary = req.body.issue.fields.summary;
   const jiraDescription = req.body.issue.fields.description;
   const jiraKey = req.body.issue.key;
   const jiraProject = req.body.issue.fields.project.key;
-  title = jiraSummary + jiraDescription;
+  let pre_text = jiraKey + '\n'
+  text = pre_text + 'Summary: ' + jiraSummary + '\n' + 'Description: ' + jiraDescription;
   let jiraWebHookProcessor = new JiraWebHookProcessor(config);
-  const response = generatedAutomatedResponse({ config: responsesConfig, title: title });
-  jiraWebHookProcessor.sendToSlack(response, jiraProject);
+  const response = generatedAutomatedResponse({ config: responsesConfig, title: text });
+  const title = 'Prometheus Response:' + '\n' + response; // Prometheus Response
+  jiraWebHookProcessor.sendToSlack(text, title, jiraProject);
+  //jiraWebHookProcessor.sendToJira(response, jiraKey);
+  console.log(response);
+  res.send(response);
+} catch (e){
+  console.log(e); // not a valid jira webhook
+}
+  //res.send('OK');
+});
+
+app.post('/prometheus-bot-slack', (req, res) => {
+  try {
+  const slackCallback = req.body.callback_id;
+  const slackActionName = req.body.actions[0].name;
+  const slackActionValue = req.body.actions[0].value;
+  const slackOriginal = req.body.original_message;
+  const slackResponseUrl = req.body.response_url;
+  const slackOriginalJSON = JSON.parse(slackOriginal);
+  const jiraKey = slackOriginalJSON.text.match('[A-Z]+-[0-9]+')[0];
+  const text = slackOriginalJSON.text;
+
+  //const jiraKey = req.body.issue.key;
+  //const jiraProject = req.body.issue.fields.project.key;
+  //title = jiraSummary + jiraDescription;
+  let jiraWebHookProcessor = new JiraWebHookProcessor(config);
+  const response = generatedAutomatedResponse({ config: responsesConfig, title: text });
   jiraWebHookProcessor.sendToJira(response, jiraKey);
+  console.log(response);
   res.send(response);
 } catch (e){
   console.log(e); // not a valid jira webhook
