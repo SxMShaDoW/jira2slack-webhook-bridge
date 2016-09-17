@@ -51,12 +51,53 @@ module.exports = class JiraWebHookProcessor {
    * @param {object} body - body from Express.js
    * @param {string} key - jira project key to match to configuration
    */
-  sendToSlack(body, key) {
+  sendToSlack(text, attachment_title, key) {
     if (!this.config.projects.hasOwnProperty(key)) {
       throw new Error(`Unkown project: ${key}`);
     }
     let projectConfig = this.config.projects[key];
-    projectConfig.payload.text = body;
+    const action_to_channel = [
+        {
+            "title": attachment_title,
+            "text": "Does this response look okay?",
+            "fallback": "TBD",
+            "callback_id": "response_promethesus",
+            "color": "#3AA3E3",
+            "attachment_type": "default",
+            "actions": [
+                {
+                    "name": "good",
+                    "text": "Looks Correct",
+                    "type": "button",
+                    "style": "primary",
+                    "value": "good"
+                },
+                {
+                    "name": "bad",
+                    "text": "Don't send",
+                    "type": "button",
+                    "value": "bad"
+                },
+                {
+                    "name": "modify",
+                    "text": "Modify",
+                    "style": "danger",
+                    "type": "button",
+                    "value": "modify",
+                    "confirm": {
+                        "title": "Modify my responses?",
+                        "text": "Do you want me to overwrite this?",
+                        "ok_text": "Yes",
+                        "dismiss_text": "No"
+                    }
+                }
+            ]
+        }
+    ]
+
+
+    projectConfig.payload.text = text;
+    projectConfig.payload.attachments = action_to_channel;
 
     if (projectConfig.payload.text) {
       this.httpClient.post({
